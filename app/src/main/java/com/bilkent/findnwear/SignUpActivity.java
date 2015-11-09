@@ -10,12 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-
-import com.cengalabs.flatui.FlatUI;
 
 import org.json.JSONObject;
 
@@ -26,56 +23,45 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
-    public static String email;
-    public static ArrayList<Cloth> clothes;
+public class SignUpActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_sign_up);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        DownloadPhotosTask task = new DownloadPhotosTask();
-// Getting action bar drawable and setting it.
-// Sometimes weird problems may occur while changing action bar drawable at runtime.
-// You can try to set title of the action bar to invalidate it after setting background.
-        //getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(MainActivity.this, FlatUI.DEEP, false));
-        //getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(MainActivity.this,FlatUI.DEEP, false));
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        setSupportActionBar(toolbar);
+        final EditText name = (EditText)findViewById(R.id.name);
+        final EditText surname = (EditText)findViewById(R.id.surname);
+        final EditText email = (EditText)findViewById(R.id.email);
+        final EditText password = (EditText)findViewById(R.id.password);
+        final EditText passwordValidator = (EditText)findViewById(R.id.password_again);
+        Button signUp = (Button) findViewById(R.id.sign_up_button);
+        signUp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                if(password.getText().toString().equals(passwordValidator.getText().toString())){
+                    SignUpTask task = new SignUpTask(name.getText().toString(), surname.getText().toString(),
+                            email.getText().toString(),password.getText().toString());
+                    task.execute();
+                }else{
+                    Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+    public class SignUpTask extends AsyncTask<Void, Void, Boolean> {
+        private final String name;
+        private final String surname;
+        private final String email;
+        private final String password;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-    public class DownloadPhotosTask extends AsyncTask<Void, Void, Boolean> {
-
-        DownloadPhotosTask() {
+        SignUpTask(String name, String surname, String email, String password) {
+            this.email = email;
+            this.password = password;
+            this.name = name;
+            this.surname = surname;
         }
 
         @Override
@@ -87,11 +73,14 @@ public class MainActivity extends AppCompatActivity {
             StringBuffer chaine = new StringBuffer("");
             try {
                 String charset = "UTF-8";  // Or in Java 7 and later, use the constant: java.nio.charset.StandardCharsets.UTF_8.name()
-                String query = String.format("email=%s",
-                        URLEncoder.encode(email, charset));
-                URL url = new URL("http://139.179.92.250/photoURLs.php");
+                String query = String.format("name=%s&surname=%s&email=%s&password=%s",
+                        URLEncoder.encode(name, charset),
+                        URLEncoder.encode(surname, charset),
+                        URLEncoder.encode(email, charset),
+                        URLEncoder.encode(password, charset));
+                URL url = new URL("http://139.179.92.250/signUp.php");
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-                String userCredentials = "email";
+                String userCredentials = "name:surname:email:password";
                 String basicAuth = "Basic " + Base64.encode(userCredentials.getBytes(), Base64.DEFAULT);
                 connection.setRequestProperty("Authorization", basicAuth);
                 connection.setRequestMethod("POST");
@@ -125,9 +114,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("message", message);
                 //Sign up is complete
                 if (code == 1) {
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(SignUpActivity.this, MainActivity.class);
+                    startActivity(i);
                 } else {//Sign up is not complete
-
+                    Toast.makeText(SignUpActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 Log.e("Fail 3", e.toString());
@@ -136,4 +126,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
+
 }
