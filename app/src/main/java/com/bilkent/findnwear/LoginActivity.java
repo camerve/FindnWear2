@@ -69,7 +69,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private CallbackManager mCallBackManager;
-    public static String userName, userSurname, userEmail;
+    public static String userName, userSurname, userEmail,userPassword;
     private FacebookCallback<LoginResult> mCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
@@ -79,13 +79,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 //Info about user is stored in profile variable
                 userName= profile.getFirstName();
                 userSurname = profile.getLastName();
-
+                userPassword = profile.getId();
             }
             GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                 @Override
                 public void onCompleted(JSONObject object, GraphResponse response) {
                     try {
                         userEmail = object.getString("email");
+                        SignUpTask task = new SignUpTask(userName,userSurname,userEmail,userPassword);
+                        task.execute();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -429,7 +431,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 String query = String.format("email=%s&password=%s",
                         URLEncoder.encode(param1, charset),
                         URLEncoder.encode(param2, charset));
-                URL url = new URL("http://144.122.177.45/girisOnayi.php");
+                URL url = new URL("http://"+ MainActivity.IPAddress+"/girisOnayi.php");
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection();
                 String userCredentials = "username:password";
                 String basicAuth = "Basic " + Base64.encode(userCredentials.getBytes(),Base64.DEFAULT);
@@ -470,6 +472,82 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     startActivity(i);
                 } else {//Eğer kullanıcı adı ve şifre doğru değilse
                     Toast.makeText(LoginActivity.this, "Kullanıcı adı veya şifre yanlış", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Log.e("Fail 3", e.toString());
+            }
+
+            return true;
+        }
+    }
+    public class SignUpTask extends AsyncTask<Void, Void, Boolean> {
+        private final String name;
+        private final String surname;
+        private final String email;
+        private final String password;
+
+        SignUpTask(String name, String surname, String email, String password) {
+            this.email = email;
+            this.password = password;
+            this.name = name;
+            this.surname = surname;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            String result ="";
+            int code;
+            InputStream is;
+
+            StringBuffer chaine = new StringBuffer("");
+            try {
+                String charset = "UTF-8";  // Or in Java 7 and later, use the constant: java.nio.charset.StandardCharsets.UTF_8.name()
+                String query = String.format("name=%s&surname=%s&email=%s&password=%s",
+                        URLEncoder.encode(name, charset),
+                        URLEncoder.encode(surname, charset),
+                        URLEncoder.encode(email, charset),
+                        URLEncoder.encode(password, charset));
+                URL url = new URL("http://139.179.92.250/signUp.php");
+                HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+                String userCredentials = "name:surname:email:password";
+                String basicAuth = "Basic " + Base64.encode(userCredentials.getBytes(), Base64.DEFAULT);
+                connection.setRequestProperty("Authorization", basicAuth);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+                //connection.setRequestProperty( "Accept", "*/*" );
+                connection.setUseCaches(false);
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.connect();
+                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+
+                writer.write(query);
+                writer.flush();
+
+                BufferedReader reader = new BufferedReader(new
+                        InputStreamReader(connection.getInputStream()));
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    Log.e("line", line);
+                    chaine.append(line);
+                }
+                result = chaine.toString();
+                Log.e("in SignUpTask" , "Result: " + result);
+            } catch (Exception e) {
+                return false;
+            }
+            try {
+                JSONObject json_data = new JSONObject(result);
+                code = (json_data.getInt("success"));
+                String message = json_data.getString("message");
+                Log.e("message", message);
+                //Sign up is complete
+                if (code == 1) {
+                    MainActivity.email = email;
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(i);
+                } else {//Sign up is not complete
+                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 Log.e("Fail 3", e.toString());

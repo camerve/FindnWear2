@@ -78,7 +78,7 @@ public class SignUpActivity extends AppCompatActivity {
                         URLEncoder.encode(surname, charset),
                         URLEncoder.encode(email, charset),
                         URLEncoder.encode(password, charset));
-                URL url = new URL("http://139.179.92.250/signUp.php");
+                URL url = new URL("http://" +MainActivity.IPAddress+"/signUp.php");
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection();
                 String userCredentials = "name:surname:email:password";
                 String basicAuth = "Basic " + Base64.encode(userCredentials.getBytes(), Base64.DEFAULT);

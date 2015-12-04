@@ -12,11 +12,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.cengalabs.flatui.FlatUI;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -29,27 +33,58 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    public static String IPAddress = "139.179.153.214";
+    //"139.179.153.214" Dorm
     public static String email;
+    ListView lv ;
     public static ArrayList<Cloth> clothes;
+    Button home, search,profile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        clothes = new ArrayList<>();
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        DownloadPhotosTask task = new DownloadPhotosTask();
+        home = (Button) findViewById(R.id.button);
+        search = (Button) findViewById(R.id.button2);
+        profile= (Button) findViewById(R.id.button3);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i= new Intent(MainActivity.this,SearchActivity.class);
+                startActivity(i);
+            }
+        });
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i= new Intent(MainActivity.this,ProfileActivity.class);
+                startActivity(i);
+            }
+        });
+        lv = (ListView) findViewById(R.id.listView);
+        new DownloadPhotosTask().execute();
+
 // Getting action bar drawable and setting it.
 // Sometimes weird problems may occur while changing action bar drawable at runtime.
 // You can try to set title of the action bar to invalidate it after setting background.
         //getActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(MainActivity.this, FlatUI.DEEP, false));
         //getSupportActionBar().setBackgroundDrawable(FlatUI.getActionBarDrawable(MainActivity.this,FlatUI.DEEP, false));
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
     }
 
     @Override
@@ -81,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             String result ="";
-            int code;
             InputStream is;
 
             StringBuffer chaine = new StringBuffer("");
@@ -89,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 String charset = "UTF-8";  // Or in Java 7 and later, use the constant: java.nio.charset.StandardCharsets.UTF_8.name()
                 String query = String.format("email=%s",
                         URLEncoder.encode(email, charset));
-                URL url = new URL("http://139.179.92.250/photoURLs.php");
+                URL url = new URL("http://"+IPAddress+"/getReco.php");
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection();
                 String userCredentials = "email";
                 String basicAuth = "Basic " + Base64.encode(userCredentials.getBytes(), Base64.DEFAULT);
@@ -114,26 +148,45 @@ public class MainActivity extends AppCompatActivity {
                     chaine.append(line);
                 }
                 result = chaine.toString();
-                Log.e("in SignUpTask" , "Result: " + result);
+                Log.e("in DownloadClothesTask" , "Result: " + result);
             } catch (Exception e) {
                 return false;
             }
             try {
-                JSONObject json_data = new JSONObject(result);
-                code = (json_data.getInt("success"));
-                String message = json_data.getString("message");
-                Log.e("message", message);
-                //Sign up is complete
-                if (code == 1) {
-                    Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                } else {//Sign up is not complete
-
+                JSONArray issueObj = new JSONArray(result);
+                for (int i = 0; i < issueObj.length(); i++) {
+                    JSONObject issue = issueObj.getJSONObject(i);
+                    String description = issue.optString("description");
+                    String price = issue.optString("price");
+                    String url = issue.optString("url");
+                    String id = issue.optString("id");
+                    String pictureURL = issue.optString("photo_url");
+                    Cloth cloth = new Cloth(description,pictureURL, price, id);
+                    clothes.add(cloth);
                 }
-            } catch (Exception e) {
-                Log.e("Fail 3", e.toString());
+
+                } catch (JSONException e1) {
+                e1.printStackTrace();
             }
 
             return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            ArrayList<String> isimler= new ArrayList<>();
+            ArrayList<String> photoURLs= new ArrayList<>();
+            for(int k=0;k<clothes.size();k++){
+                isimler.add(clothes.get(k).getDescription());
+                photoURLs.add(clothes.get(k).getPhotoURL());
+            }
+            int size = (clothes.size()/3) + 1;
+            ArrayList<String> temp = new ArrayList<>();
+            for(int i =0; i<size;i++){
+                temp.add("etc");
+            }
+            ArrayAdapter adapter = new HomeAdapter(MainActivity.this,temp,isimler,photoURLs);
+            lv.setAdapter(adapter);
         }
     }
 }
