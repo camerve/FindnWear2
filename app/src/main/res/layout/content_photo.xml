@@ -6,18 +6,16 @@
     android:paddingBottom="0dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_photo" tools:context=".PhotoActivity">
-    <ListView
-        android:id="@+id/newsListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/buttonLayout" />
+
 
         <LinearLayout
             android:id="@+id/buttonLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="50dp">
             <Button
                 android:layout_width="wrap_content"
                 android:layout_weight="1"

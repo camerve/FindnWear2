@@ -1,18 +1,18 @@
 package com.bilkent.findnwear;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,50 +27,42 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class WishlistActivity extends AppCompatActivity {
-    Button home, search,profile;
-    static ListView lv ;
-    public static ArrayList<Cloth> wishlist;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wishlist);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        wishlist = new ArrayList<>();
-        lv = (ListView) findViewById(R.id.listView);
-        home = (Button) findViewById(R.id.button);
-        search = (Button) findViewById(R.id.button2);
-        profile= (Button) findViewById(R.id.button3);
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(WishlistActivity.this,MainActivity.class);
-                startActivity(i);
-            }
-        });
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(WishlistActivity.this, SearchActivity.class);
-                startActivity(i);
-            }
-        });
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(WishlistActivity.this, ProfileActivity.class);
-                startActivity(i);
-            }
-        });
-        new DownloadWishlistTask().execute();
-
-
-
+/**
+ * Created by 1 on 06.12.2015.
+ */
+public class WishlistAdapter extends ArrayAdapter {
+    ArrayList<Cloth> data;
+    ArrayList<String> description;
+    Activity context;
+    int deletedPosition;
+    public WishlistAdapter(Activity context,ArrayList<String> description, ArrayList<Cloth> data) {
+        super(context, R.layout.wishlist_list_item, description);
+        this.description = description;
+        this.data = data;
+        this.context = context;
     }
-    public class DownloadWishlistTask extends AsyncTask<Void, Void, Boolean> {
 
-        DownloadWishlistTask() {
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = context.getLayoutInflater();
+        View rowView = inflater.inflate(R.layout.wishlist_list_item, null, true);
+        //Views inside the wiahlist item
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.imageView);
+        Button deleteButton = (Button) rowView.findViewById(R.id.deleteButton);
+        TextView desc = (TextView) rowView.findViewById(R.id.description);
+        desc.setText(description.get(position));
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletedPosition = position;
+                new DeleteTask().execute();
+            }
+        });
+        return rowView;
+    }
+    public class DeleteTask extends AsyncTask<Void, Void, Boolean> {
+
+        DeleteTask() {
         }
 
         @Override
@@ -83,7 +75,7 @@ public class WishlistActivity extends AppCompatActivity {
                 String charset = "UTF-8";  // Or in Java 7 and later, use the constant: java.nio.charset.StandardCharsets.UTF_8.name()
                 String query = String.format("email=%s",
                         URLEncoder.encode(MainActivity.email, charset));
-                URL url = new URL("http://"+MainActivity.IPAddress+"/getWishlist.php");
+                URL url = new URL("http://"+MainActivity.IPAddress+"/deleteItemWishlist.php");
                 HttpURLConnection connection = (HttpURLConnection)url.openConnection();
                 String userCredentials = "email";
                 String basicAuth = "Basic " + Base64.encode(userCredentials.getBytes(), Base64.DEFAULT);
@@ -108,21 +100,20 @@ public class WishlistActivity extends AppCompatActivity {
                     chaine.append(line);
                 }
                 result = chaine.toString();
-                Log.e("in DownloadWishlistTask" , "Result: " + result);
+                Log.e("in DeleteFromWishlistTask" , "Result: " + result);
             } catch (Exception e) {
                 return false;
             }
             try {
-                JSONArray issueObj = new JSONArray(result);
-                for (int i = 0; i < issueObj.length(); i++) {
-                    JSONObject issue = issueObj.getJSONObject(i);
-                    String description = issue.optString("description");
-                    String price = issue.optString("price");
-                    String url = issue.optString("url");
-                    String id = issue.optString("id");
-                    String pictureURL = issue.optString("photo_url");
-                    Cloth cloth = new Cloth(description,pictureURL, price, id);
-                    wishlist.add(cloth);
+                JSONObject json_data = new JSONObject(result);
+                int code = (json_data.getInt("success"));
+                String message = json_data.getString("message");
+                Log.e("message", message);
+                //Sign up is complete
+                if (code == 1) {
+                    WishlistActivity.wishlist.remove(deletedPosition);
+                } else {//Item cannot be deleted there's a problem
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                 }
 
             } catch (JSONException e1) {
@@ -135,12 +126,11 @@ public class WishlistActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             ArrayList<String> desciption= new ArrayList<>();
-            for(int k=0;k<wishlist.size();k++){
-                desciption.add(wishlist.get(k).getDescription());
+            for(int k=0;k<WishlistActivity.wishlist.size();k++){
+                desciption.add(WishlistActivity.wishlist.get(k).getDescription());
             }
-            ArrayAdapter adapter = new WishlistAdapter(WishlistActivity.this,desciption,wishlist);
-            lv.setAdapter(adapter);
+            ArrayAdapter adapter = new WishlistAdapter(context,desciption,WishlistActivity.wishlist);
+            WishlistActivity.lv.setAdapter(adapter);
         }
     }
-
 }

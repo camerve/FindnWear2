@@ -8,17 +8,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Wishlist"
-            android:textSize="20dp"/>
+            android:textSize="30dp"
+            android:layout_marginTop="10dp"/>
         <ListView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_weight="2"
             android:layout_height="wrap_content"
             android:id="@+id/listView"
+            android:layout_marginTop="15dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_alignEnd="@+id/relativeLayout"
@@ -31,7 +34,8 @@
             android:layout_alignParentEnd="true">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp">
                 <Button
                     android:layout_width="0dp"
                     android:layout_weight="1"

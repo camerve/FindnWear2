@@ -33,7 +33,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    public static String IPAddress = "139.179.153.214";
+    public static String IPAddress = "46.101.123.217";
     //"139.179.153.214" Dorm
     public static String email;
     ListView lv ;
@@ -51,13 +51,13 @@ public class MainActivity extends AppCompatActivity {
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(MainActivity.this,MainActivity.class);
+                startActivity(i);
             }
         });
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent i= new Intent(MainActivity.this,SearchActivity.class);
                 startActivity(i);
             }

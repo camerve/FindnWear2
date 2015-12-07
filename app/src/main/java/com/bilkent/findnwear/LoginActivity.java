@@ -403,6 +403,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setAdapter(adapter);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LoginActivity.this.finish();
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
