@@ -48,6 +48,12 @@ public interface FindNWearInterface {
                 @Part("type") String type,
                 Callback<ClothList> cb);
 
+    @GET("/searchKeyword")
+    void searchKeyword(@Query("type") String type,
+                       @Query("color") String color,
+                       @Query("texture") String texture,
+                       Callback<ClothList> cb);
+
     @GET("/getWishlist")
     void getWishlist(@Query("user_id") int user_id,
                      Callback<Wishlist> cb);

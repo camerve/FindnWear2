@@ -47,6 +47,11 @@ public class SearchResultsActivity extends AppCompatActivity {
                 intent.putExtra("data", new Gson().toJson(clothAdapter.getItem(position)));
                 startActivity(intent);
             }
+
+            @Override
+            public void onDelete(int position, int id, RecyclerView.ViewHolder v) {
+
+            }
         });
         resultsRecyclerView.setAdapter(clothAdapter);
 

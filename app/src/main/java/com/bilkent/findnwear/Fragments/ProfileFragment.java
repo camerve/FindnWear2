@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bilkent.findnwear.Adapters.WishlistAdapter;
 import com.bilkent.findnwear.ClothActivity;
 import com.bilkent.findnwear.Model.Cloth;
+import com.bilkent.findnwear.Model.Response.Base;
 import com.bilkent.findnwear.Model.Response.Wishlist;
 import com.bilkent.findnwear.R;
 import com.bilkent.findnwear.Utilities.API;
@@ -82,6 +83,25 @@ public class ProfileFragment extends Fragment {
                 intent.putExtra("data", new Gson().toJson(wishlistAdapter.getItem(position)));
                 startActivity(intent);
             }
+
+            @Override
+            public void onDelete(int position, int id, RecyclerView.ViewHolder v) {
+                API.instance.removeWishlist(
+                        Storage.getUser().id,
+                        wishlistAdapter.getItem(position).id,
+                        new Callback<Base>() {
+                            @Override
+                            public void success(Base clothList, Response response) {
+                                if (clothList.success) {
+                                    refreshList();
+                                }
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                            }
+                        });
+            }
         });
         recyclerView.setAdapter(wishlistAdapter);
 
@@ -92,23 +112,30 @@ public class ProfileFragment extends Fragment {
                 emptyTextView.setVisibility(View.VISIBLE);
             }
         }
-        else{
-            API.instance.getWishlist(Storage.getUser().id, new Callback<Wishlist>() {
-                @Override
-                public void success(Wishlist clothList, Response response) {
-                    if (clothList.success) {
-                        wishlistAdapter.setData(clothList.items);
-                        if (clothList.items.size() == 0) {
-                            emptyTextView.setVisibility(View.VISIBLE);
-                        }
+    }
+
+    private void refreshList() {
+        API.instance.getWishlist(Storage.getUser().id, new Callback<Wishlist>() {
+            @Override
+            public void success(Wishlist clothList, Response response) {
+                if (clothList.success) {
+                    wishlistAdapter.setData(clothList.items);
+                    if (clothList.items.size() == 0) {
+                        emptyTextView.setVisibility(View.VISIBLE);
                     }
                 }
+            }
 
-                @Override
-                public void failure(RetrofitError error) {
-                }
-            });
-        }
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        refreshList();
     }
 
     @Override

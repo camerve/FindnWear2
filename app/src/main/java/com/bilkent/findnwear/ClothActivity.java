@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -234,6 +235,7 @@ public class ClothActivity extends AppCompatActivity implements LocationListener
         brandTextView.setText(cloth.brand);
         priceTextView.setText(cloth.price + " TL");
         storeLinkTextView.setText(Html.fromHtml("<a href='" + cloth.url + "'>" + cloth.url + "</a>"));
+        storeLinkTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, android.R.id.text1, new String[0]);

@@ -103,7 +103,8 @@ public class SearchActivity extends AppCompatActivity {
 
                     float scale = (height > width) ? 800f / (float)height : 800f / (float)width;
 
-                    Bitmap.createScaledBitmap(bitmap, ((int)((float)width * scale)), ((int)((float)height * scale)), false);
+                    Log.d("SendingSize", ((int)((float)width * scale)) + " " + ((int)((float)height * scale)));
+                    bitmap = Bitmap.createScaledBitmap(bitmap, ((int)((float)width * scale)), ((int)((float)height * scale)), false);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
                     fos.close();
                 } catch (FileNotFoundException e) {

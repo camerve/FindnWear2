@@ -7,12 +7,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.bilkent.findnwear.Fragments.RecommendationFragment;
 import com.bilkent.findnwear.Fragments.ProfileFragment;
+import com.bilkent.findnwear.Fragments.RecommendationFragment;
 import com.bilkent.findnwear.Fragments.SearchFragment;
+import com.bilkent.findnwear.Utilities.Storage;
 
 import java.util.Locale;
 
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         showFragmentAtPosition(0);
+
+        Log.d("MAin", Storage.getUser().email);
 
     }
 

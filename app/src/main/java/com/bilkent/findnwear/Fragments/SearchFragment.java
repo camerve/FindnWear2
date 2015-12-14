@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.bilkent.findnwear.KeywordActivity;
 import com.bilkent.findnwear.R;
 import com.bilkent.findnwear.SearchActivity;
 import com.bilkent.findnwear.Utilities.CameraPreview;
@@ -40,6 +41,7 @@ public class SearchFragment extends Fragment {
     private Button galleryButton;
     private Camera mCamera;
     private CameraPreview mPreview;
+    private Button keywordButton;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -60,6 +62,7 @@ public class SearchFragment extends Fragment {
 
         cameraButton = (Button) rootView.findViewById(R.id.camera_button);
         galleryButton = (Button) rootView.findViewById(R.id.gallery_button);
+        keywordButton = (Button) rootView.findViewById(R.id.keyword_button);
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +76,14 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 EasyImage.openGallery(SearchFragment.this);
+            }
+        });
+
+        keywordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), KeywordActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -90,11 +101,13 @@ public class SearchFragment extends Fragment {
         super.onResume();
         mCamera = getCameraInstance();
 
-        // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraPreview(getActivity(), mCamera);
-        FrameLayout preview = (FrameLayout) rootView.findViewById(R.id.camera_preview);
-        preview.removeAllViews();
-        preview.addView(mPreview);
+        if(mCamera!=null) {
+            // Create our Preview view and set it as the content of our activity.
+            mPreview = new CameraPreview(getActivity(), mCamera);
+            FrameLayout preview = (FrameLayout) rootView.findViewById(R.id.camera_preview);
+            preview.removeAllViews();
+            preview.addView(mPreview);
+        }
     }
 
     @Override
@@ -128,12 +141,6 @@ public class SearchFragment extends Fragment {
         Intent intent = new Intent(getActivity(), SearchActivity.class);
         intent.putExtra("File", photoFile);
         startActivity(intent);
-
-        /*Picasso.with(getActivity())
-                .load(photoFile)
-                .fit()
-                .centerCrop()
-                .into(imageView);*/
     }
 
     private boolean requestCameraGallery() {
@@ -167,7 +174,15 @@ public class SearchFragment extends Fragment {
     }
 
     private void cameraPermissionTaken() {
+        mCamera = getCameraInstance();
 
+        if(mCamera!=null) {
+            // Create our Preview view and set it as the content of our activity.
+            mPreview = new CameraPreview(getActivity(), mCamera);
+            FrameLayout preview = (FrameLayout) rootView.findViewById(R.id.camera_preview);
+            preview.removeAllViews();
+            preview.addView(mPreview);
+        }
     }
 
     private boolean checkCameraHardware(Context context) {

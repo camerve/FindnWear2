@@ -89,6 +89,13 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
             }
         });
 
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onDelete(position, cloth.id, holder);
+            }
+        });
+
     }
 
     // Return the total count of items

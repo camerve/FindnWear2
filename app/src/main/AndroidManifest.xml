@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bilkent.findnwear" >
+    package="com.bilkent.findnwear">
 
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -22,7 +22,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -30,7 +30,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/DarkAppTheme" >
+            android:theme="@style/DarkAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,8 +39,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:label="Find&apos;nWear" >
-        </activity>
+            android:label="Find&apos;nWear"></activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -48,23 +47,19 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".ClothActivity"
-            android:label="@string/title_activity_photo" >
-        </activity>
+            android:label="@string/title_activity_photo"></activity>
         <activity
             android:name=".SearchResultsActivity"
-            android:label="@string/title_activity_results" >
-        </activity>
+            android:label="@string/title_activity_results"></activity>
         <activity
             android:name=".SearchActivity"
-            android:label="@string/title_activity_search" >
-        </activity>
-        <activity android:name=".ProfileActivity" >
-        </activity>
+            android:label="@string/title_activity_search"></activity>
+        <activity android:name=".ProfileActivity"></activity>
         <activity
             android:name=".WishlistActivity"
-            android:label="@string/title_activity_wishlist" >
-        </activity>
+            android:label="@string/title_activity_wishlist"></activity>
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+        <activity android:name=".KeywordActivity"></activity>
     </application>
 
 </manifest>

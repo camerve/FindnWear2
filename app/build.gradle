@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.bilkent.findnwear"
-        minSdkVersion 18
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -41,4 +41,6 @@ dependencies {
     compile 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     compile 'com.github.jkwiecien:EasyImage:1.1.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
 }

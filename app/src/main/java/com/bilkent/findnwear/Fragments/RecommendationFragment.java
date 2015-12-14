@@ -65,6 +65,11 @@ public class RecommendationFragment extends Fragment {
                 intent.putExtra("data", new Gson().toJson(clothAdapter.getItem(position)));
                 startActivity(intent);
             }
+
+            @Override
+            public void onDelete(int position, int id, RecyclerView.ViewHolder v) {
+
+            }
         });
         recyclerView.setAdapter(clothAdapter);
 
@@ -76,7 +81,7 @@ public class RecommendationFragment extends Fragment {
             API.instance.getReco(Storage.getUser().id, new Callback<ClothList>() {
                 @Override
                 public void success(ClothList clothList, Response response) {
-                    if(clothList.success){
+                    if (clothList.success) {
                         clothAdapter.setData(clothList.items);
                     }
                 }

@@ -48,11 +48,33 @@
     <string name="wishlist_empty">Your wishlist is empty. Use Search of Recommendations to find new clothes.</string>
     <string name="added_to_wishlist">Added to wishlist!</string>
     <string name="something_went_wrong">Something went wrong</string>
+    <string name="choose_color">Choose Color</string>
+    <string name="choose_texture">Choose Texture</string>
 
     <string-array name="types_array">
         <item>Shirt</item>
         <item>T-Shirt</item>
         <item>Skirt</item>
         <item>Pants</item>
+    </string-array>
+
+    <string-array name="colors_array">
+        <item>Red</item>
+        <item>Light Blue</item>
+        <item>Dark Blue</item>
+        <item>Green</item>
+        <item>Pink</item>
+        <item>Light Pink</item>
+        <item>Grey</item>
+        <item>Black</item>
+        <item>Brown</item>
+        <item>White</item>
+    </string-array>
+
+    <string-array name="textures_array">
+        <item>Plain</item>
+        <item>Plaid</item>
+        <item>Striped</item>
+        <item>Other</item>
     </string-array>
 </resources>
