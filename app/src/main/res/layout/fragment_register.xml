@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:background="#BB0288D1"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView android:id="@+id/name" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Name"
+                android:inputType="textEmailAddress" android:maxLines="1"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView android:id="@+id/surname" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Surname"
+                android:inputType="textEmailAddress" android:maxLines="1"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView android:id="@+id/email" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Email"
+                android:inputType="textEmailAddress" android:maxLines="1"
+                android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText android:id="@+id/password" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Password"
+                android:imeActionId="@integer/customImeActionId"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified" android:inputType="textPassword"
+                android:maxLines="1" android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText android:id="@+id/password_again" android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:hint="Password(Again)"
+                android:imeActionId="@integer/customImeActionId"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified" android:inputType="textPassword"
+                android:typeface="serif"
+                android:maxLines="1" android:singleLine="true" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button android:id="@+id/sign_up_button" style="?android:textAppearanceSmall"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" android:text="SIGN UP"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</RelativeLayout>

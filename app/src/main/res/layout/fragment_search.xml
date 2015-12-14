@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/camera_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        />
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:color/darker_gray"
+        android:scaleType="centerCrop"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88FFFFFF"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/camera_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_takepicture"
+            android:text="@string/take_a_picture"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:background="@android:color/transparent"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:paddingTop="16dp" />
+
+        <Button
+            android:id="@+id/gallery_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_gallery"
+            android:text="@string/pick_from_gallery"
+            android:background="@android:color/transparent"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:paddingTop="16dp" />
+
+        <Button
+            android:id="@+id/keyword_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:drawableTop="@drawable/ic_keyword"
+            android:background="@android:color/transparent"
+            android:text="@string/search_by_keyword"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:paddingTop="16dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>
